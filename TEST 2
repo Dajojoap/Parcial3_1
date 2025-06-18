@@ -25,7 +25,7 @@ firebase_admin.initialize_app(cred, {
 })
 
 # ------------------------------
-# Clases de datos para guardar en json
+# Clases de datos para guardar en json, clasifica los datos si es un usuario o un libro
 # ------------------------------
 class Libro:
     def __init__(self, titulo, autor, categoria, id_libro,disponibilidad):
@@ -108,12 +108,12 @@ class BibliotecaApp: #ventana principal
         self.lista_libros = tk.Listbox(self.pestana_libros, width=60)
         self.lista_libros.grid(column=0, row=6, columnspan=2, pady=5)
         self.actualizar_lista_libros()
-
-        # botones para buscar y listar libros
+9
+        # botones para buscar y listar (mostrar una lista de todos los libros registrados) libros
         ttk.Button(self.pestana_libros, text="Buscar libro", command=self.mostrar_busqueda_libro).grid(column=0, row=7, columnspan=2, pady=5)
         ttk.Button(self.pestana_libros, text="Listar libros", command=self.listar_libros_firebase).grid(column=0, row=8, columnspan=2, pady=5)
 
-    def configurar_pestana_usuarios(self): #frame referente a la creacion de usuarios
+    def configurar_pestana_usuarios(self): #frame referente a la creacion de usuarios, con nombre y id
         ttk.Label(self.pestana_usuarios, text="Nombre:").grid(column=0, row=0)
         self.entrada_nombre = ttk.Entry(self.pestana_usuarios)
         self.entrada_nombre.grid(column=1, row=0)
@@ -128,7 +128,7 @@ class BibliotecaApp: #ventana principal
         self.lista_usuarios.grid(column=0, row=3, columnspan=2, pady=5)
         self.actualizar_lista_usuarios()
 
-    def agregar_libro(self): #datos del libro a crear, guardar, etc
+    def agregar_libro(self): #datos del libro a crear, guardar, etc en firebase
         titulo = self.entrada_titulo.get()
         autor = self.entrada_autor.get()
         categoria = self.combo_categoria.get()
@@ -145,12 +145,12 @@ class BibliotecaApp: #ventana principal
         self.enviar_a_firebase("libros", id_libro, libro.a_diccionario())
         self.actualizar_lista_libros()
 
-        self.entrada_titulo.delete(0, tk.END)
+        self.entrada_titulo.delete(0, tk.END) #borra los datos presentes en las cajas despues del registro de un libro
         self.entrada_autor.delete(0, tk.END)
         self.combo_categoria.set('')
         self.entrada_id_libro.delete(0, tk.END)
 
-    def agregar_usuario(self): 
+    def agregar_usuario(self):  #parte que guarda los usuarios y la sube a firebase
         nombre = self.entrada_nombre.get()
         id_usuario = self.entrada_id_usuario.get()
 
@@ -167,17 +167,17 @@ class BibliotecaApp: #ventana principal
         self.entrada_nombre.delete(0, tk.END)
         self.entrada_id_usuario.delete(0, tk.END)
 
-    def actualizar_lista_libros(self):
+    def actualizar_lista_libros(self): #limpia los campos despues de un registro
         self.lista_libros.delete(0, tk.END)
         for libro in self.libros:
             self.lista_libros.insert(tk.END, f"{libro.id_libro} | {libro.titulo} por {libro.autor} [{libro.categoria}]")
 
-    def actualizar_lista_usuarios(self):
+    def actualizar_lista_usuarios(self):#limpia los campos despues de un registro
         self.lista_usuarios.delete(0, tk.END)
         for usuario in self.usuarios:
             self.lista_usuarios.insert(tk.END, f"{usuario.id_usuario} | {usuario.nombre}")
 
-    def guardar_datos_local(self):
+    def guardar_datos_local(self): #guarda y crea el json
         datos = {
             "libros": [libro.a_diccionario() for libro in self.libros],
             "usuarios": [usuario.a_diccionario() for usuario in self.usuarios]
@@ -185,7 +185,7 @@ class BibliotecaApp: #ventana principal
         with open("biblioteca_datos.json", "w") as f:
             json.dump(datos, f, indent=4)
 
-    def cargar_datos_local(self):
+    def cargar_datos_local(self): #carga los datos desde el archivo JSON
         if not os.path.exists("biblioteca_datos.json"):
             return
         with open("biblioteca_datos.json", "r") as f:
@@ -193,7 +193,7 @@ class BibliotecaApp: #ventana principal
             self.libros = [Libro(**lib) for lib in datos.get("libros", [])]
             self.usuarios = [Usuario(**usr) for usr in datos.get("usuarios", [])]
 
-    def enviar_a_firebase(self, coleccion, clave, datos):
+    def enviar_a_firebase(self, coleccion, clave, datos): #verifica si firebase funciona/esta conectado
         try:
             ref = db.reference(f"/{coleccion}/{clave}")
             ref.set(datos)
@@ -201,7 +201,7 @@ class BibliotecaApp: #ventana principal
             messagebox.showerror("Error Firebase", f"No se pudo subir a Firebase:\n{e}")
 
     # --------------------------
-    # funciones de consulta de libros
+    # funciones de consulta de libros, esto nos ayuda a buscar el libro, nos especifica los datos del mismo y si esta disponible o no, (o si no existe)
     # --------------------------
 
     def buscar_libro(self, id_libro):
@@ -217,7 +217,7 @@ class BibliotecaApp: #ventana principal
         if id_libro:
             self.buscar_libro(id_libro)
 
-    def listar_libros_firebase(self):
+    def listar_libros_firebase(self): #esto registra si hay libros en firebase
         ref = db.reference("/libros")
         libros = ref.get()
         if libros:
