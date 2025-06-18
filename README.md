@@ -18,4 +18,5 @@ TEST FALLIDO PARA REGISTRAR UN LIBRO
 ![image](https://github.com/user-attachments/assets/bb52bf1b-650a-4d9a-9a3b-bb6e09f4de0d)
 
 TEST AL NO ENCONTRAR UN LIBRO
+
 ![image](https://github.com/user-attachments/assets/0873ae47-4cde-4e28-bc27-9d73984a83bb)
