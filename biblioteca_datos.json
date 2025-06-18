@@ -1,0 +1,19 @@
+{
+    "libros": [
+        {
+            "titulo": "TESTC",
+            "autor": "g.TESTC",
+            "categoria": "Ciencia",
+            "id_libro": "1111",
+            "disponibilidad": "no disponible"
+        },
+        {
+            "titulo": "TESTA",
+            "autor": "g.TESTA",
+            "categoria": "Artes",
+            "id_libro": "1121",
+            "disponibilidad": "disponible"
+        }
+    ],
+    "usuarios": []
+}
