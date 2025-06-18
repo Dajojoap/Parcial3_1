@@ -14,6 +14,7 @@ se pueden agregar libros, usuarios y buscar libros por medio del ID,
 ![image](https://github.com/user-attachments/assets/10f2dc1f-5630-4fb7-b949-07d1f6202cd2)
 
 TEST FALLIDO PARA REGISTRAR UN LIBRO
+
 ![image](https://github.com/user-attachments/assets/bb52bf1b-650a-4d9a-9a3b-bb6e09f4de0d)
 
 TEST AL NO ENCONTRAR UN LIBRO
